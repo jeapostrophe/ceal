@@ -70,9 +70,7 @@ Primitives come from a fixed-set and are annotated with costs.
 The set of primitives would contain adaptations of most of the TEAL opcodes,
 except many which will instead work on heap fragments rather than bytestring
 objects.
-For example, `b+` would take three pointers to 32 byte regions set `m[z] = m[x]
-+ m[y]` and `btoi` would be replaced with something like `cast(uint64)(x)` which
-  reads 8 bytes from the memory starting at `x`.
+For example, `b+` would take three pointers to 32 byte regions set `m[z] = m[x] + m[y]` and `btoi` would be replaced with something like `cast(uint64)(x)` which reads 8 bytes from the memory starting at `x`.
 
 A few other TEAL concepts would be adjusted too.
 For example, we would remove "keys" as a concept in global/local storage and
