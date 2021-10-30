@@ -170,9 +170,9 @@ As a complete example:
 ```
 const a := 1
 fun b ( c ) d {
- let e := c == 0
+ let e := isZero(c)
  if e {
-  d(1)
+  d(a)
  }
  let f := c + c
  f + f
@@ -188,9 +188,9 @@ would be:
 ```
 const 1
 fun 1 {
- let #2 == 0
+ let isZero(#2)
  if #4 {
-  #3(1)
+  #3(#0)
  }
  let #2 + #2
  #5 + #5
