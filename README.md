@@ -74,6 +74,16 @@ For example, `b+` would take three pointers to 32 byte regions set `m[z] = m[x]
 + m[y]` and `btoi` would be replaced with something like `cast(uint64)(x)` which
   reads 8 bytes from the memory starting at `x`.
 
+A few other TEAL concepts would be adjusted too.
+For example, we would remove "keys" as a concept in global/local storage and
+the thing corresponding to `app_global_get` would either be a specific region
+of the heap that would be memory mapped (so changes are automatically set at
+the end of the program) or it would be `app_global_copy` and would copy the
+memory starting at a pointer.
+The second is probably better if there will eventually be many "pages" of
+global memory and it would be more "symmetric" with a `app_local_copy` that
+read the state of a specific account.
+
 # Cost accounting
 
 It is trivial to compute a worst-case execution time by computing the maximum
@@ -154,6 +164,45 @@ Rather than `fun (x_1, ..., x_n) ret b` you can just have `fun n b` and you know
 that there are `n` variables bound to the next `n` that are available, plus one
 for the `return` label.
 This `n` can itself be one of the global constants for more compression.
+
+As a complete example:
+
+```
+const a := 1
+fun b ( c ) d {
+ let e := c == 0
+ if e {
+  d(1)
+ }
+ let f := c + c
+ f + f
+}
+main {
+ let c := a + a
+ b(c)
+}
+```
+
+would be:
+
+```
+const 1
+fun 1 {
+ let #2 == 0
+ if #4 {
+  #3(1)
+ }
+ let #2 + #2
+ #5 + #5
+}
+main {
+ let #0 + #0
+ #1(#2)
+}
+```
+
+Obviously no human could keep this straight in their head, but it is a trivial
+assembler.
 
 --
 
